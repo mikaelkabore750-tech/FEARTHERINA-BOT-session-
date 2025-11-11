@@ -1,0 +1,110 @@
+<!doctype html>
+
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FEARTHERINA-BOT</title>
+  <style>
+    :root{
+      --bg1:#0f1724; --bg2:#0b1020; --glass: rgba(255,255,255,0.06);
+      --accent:#7ef9ff; --accent-2:#b892ff; --muted:rgba(255,255,255,0.65);
+      --glass-2: rgba(255,255,255,0.03);
+      --radius:18px; --shadow: 0 10px 30px rgba(2,6,23,0.6);
+    }
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;color:var(--muted);background:linear-gradient(180deg,var(--bg1),var(--bg2));-webkit-font-smoothing:antialiased}#particle-canvas{position:fixed;inset:0;z-index:0;display:block}
+
+.wrap{position:relative;z-index:2;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px}
+
+header{backdrop-filter:blur(8px);background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:24px;padding:28px 36px;box-shadow:var(--shadow);display:flex;align-items:center;gap:18px;max-width:1100px;width:100%;}
+
+.logo{display:flex;flex-direction:column;gap:4px}
+.title{font-weight:800;font-size:28px;letter-spacing:2px;color:transparent;background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text}
+.subtitle{font-size:12px;color:rgba(255,255,255,0.45)}
+
+.audio-btn{position:fixed;top:20px;right:20px;z-index:10;padding:10px 18px;border:none;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));color:var(--muted);font-weight:600;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 6px 20px rgba(0,0,0,0.45);transition:transform .25s, background .3s}
+.audio-btn:hover{transform:scale(1.05);background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff}
+
+.button-strip{margin-top:40px;display:flex;flex-wrap:wrap;justify-content:center;gap:16px;max-width:900px}
+
+.btn{padding:14px 22px;border:none;border-radius:14px;background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));color:var(--muted);font-weight:600;font-size:15px;cursor:pointer;backdrop-filter:blur(6px);box-shadow:0 6px 30px rgba(0,0,0,0.45);transition:transform .25s cubic-bezier(.2,.9,.3,1), box-shadow .25s}
+.btn:hover{transform:translateY(-5px) scale(1.03);box-shadow:0 12px 40px rgba(0,0,0,0.6);background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff}
+
+footer{margin-top:40px;color:rgba(255,255,255,0.35);font-size:13px;text-align:center}
+
+@media(max-width:760px){
+  header{flex-direction:column;align-items:flex-start;padding:20px}
+  .title{font-size:22px}
+}
+
+.neon{position:relative}
+.neon::after{content:'';position:absolute;inset:-4px;background:linear-gradient(90deg,var(--accent),var(--accent-2));filter:blur(20px);opacity:0.25;border-radius:12px;z-index:-1}
+
+  </style>
+</head>
+<body>
+  <canvas id="particle-canvas"></canvas><button id="audioToggle" class="audio-btn">🎵 Activer le son</button> <audio id="bgMusic" src="gpt.mp3" preload="auto"></audio>
+
+  <div class="wrap">
+    <header>
+      <div class="logo">
+        <div class="title neon">FEARTHERINA-BOT</div>
+        <div class="subtitle">Ultra-stylish hub — quick links & tools</div>
+      </div>
+      <div style="flex:1"></div>
+      <div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.5)">©2025 powered by mikael-dev</div>
+    </header><div class="button-strip">
+  <button onclick="window.open('/feartherinaqr')" class="btn">QR Code</button>
+  <button onclick="window.open('/pair')" class="btn">Pair Code</button>
+  <button onclick="window.open('https://github.com/mikaelkabore750-tech/FEARTHERINA-BOT-')" class="btn">Bot Repo</button>
+  <button onclick="window.open('https://github.com/wasixd/WASI-MD-PLUGINS')" class="btn">Plugins</button>
+  <button onclick="window.open('https://wa.me/22606527293?text=Feartherina-bot')" class="btn">Contact Me</button>
+  <button onclick="window.open('https://chat.whatsapp.com/120363419737179122@g.us')" class="btn">Wa Group</button>
+  <button onclick="window.open('https://whatsapp.com/channel/0029Vb6s5JpDzgT69NCS7i1a')" class="btn">Wa Channel</button>
+  <button onclick="window.open('https://instagram.com/deku sôta')" class="btn">Instagram</button>
+  <button onclick="window.open('https://youtube.com/@xmjenifer')" class="btn">Youtube</button>
+</div>
+
+<footer>Merci d'utiliser FEARTHERINA-BOT — connecte-toi à ton univers ⚡</footer>
+
+  </div>  <script>
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let w = canvas.width = innerWidth;
+    let h = canvas.height = innerHeight;
+
+    window.addEventListener('resize', ()=>{w=canvas.width=innerWidth;h=canvas.height=innerHeight;initParticles()});
+
+    const rand = (a,b)=> Math.random()*(b-a)+a;
+
+    class P{constructor(){this.reset()}reset(){this.x=rand(0,w);this.y=rand(0,h);this.vx=rand(-0.15,0.15);this.vy=rand(-0.2,0.2);this.r=rand(0.8,2.6);this.life=rand(80,260);this.maxLife=this.life;this.hue=rand(180,270)}move(){this.x+=this.vx;this.y+=this.vy;this.life--; if(this.x< -10) this.x=w+10; if(this.x> w+10) this.x=-10; if(this.y< -10) this.y=h+10; if(this.y> h+10) this.y=-10; if(this.life<=0)this.reset()}draw(){let alpha = Math.max(0, this.life/this.maxLife);ctx.beginPath();ctx.fillStyle = `hsla(${this.hue},85%,60%,${alpha*0.9})`;ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fill()}}
+
+    let particles=[];
+    function initParticles(n=120){particles=[];for(let i=0;i<n;i++) particles.push(new P())}
+    initParticles();
+
+    function frame(){ctx.clearRect(0,0,w,h);
+      const g=ctx.createLinearGradient(0,0,w,h);g.addColorStop(0,'rgba(6,7,15,0.06)');g.addColorStop(1,'rgba(10,12,20,0.12)');ctx.fillStyle=g;ctx.fillRect(0,0,w,h);
+      for(let i=0;i<particles.length;i++){particles[i].move();particles[i].draw();for(let j=i+1;j<particles.length;j++){const a=particles[i],b=particles[j];const dx=a.x-b.x,dy=a.y-b.y;const d=dx*dx+dy*dy;if(d<9000){ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.strokeStyle=`hsla(${(a.hue+b.hue)/2},75%,60%,${0.06 - d/20000})`;ctx.lineWidth=0.8;ctx.stroke()}}}
+      requestAnimationFrame(frame)}
+    frame();
+
+    // === Gestion du son ===
+    const bgMusic = document.getElementById('bgMusic');
+    const toggleBtn = document.getElementById('audioToggle');
+    let playing = false;
+
+    toggleBtn.addEventListener('click', ()=>{
+      if(!playing){
+        bgMusic.play().then(()=>{
+          playing = true;
+          toggleBtn.textContent = '🔇 Couper le son';
+        }).catch(err=>alert('Impossible de lire le son automatiquement : '+err));
+      } else {
+        bgMusic.pause();
+        playing = false;
+        toggleBtn.textContent = '🎵 Activer le son';
+      }
+    });
+  </script></body>
+</html>
